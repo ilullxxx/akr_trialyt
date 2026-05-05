@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AKR Trend YouTube</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --red: #FF1A1A;
+    --red-dim: #c00;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #f0f0f0;
+    --muted: #777;
+    --accent: #FF1A1A;
+    --positive: #22c55e;
+    --negative: #ef4444;
+    --card-hover: #1f1f1f;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: var(--red);
+    border-radius: 8px;
+    display: grid; place-items: center;
+  }
+  .logo-icon svg { width: 18px; height: 18px; fill: white; }
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+  .logo-text span { color: var(--red); }
+
+  .header-badge {
+    font-size: 0.7rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 999px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 5rem 2rem 3.5rem;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(255,26,26,0.18) 0%, transparent 70%);
+    top: 0; left: 50%; transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--red);
+    display: block;
+  }
+  .hero p {
+    margin-top: 1.2rem;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 520px;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.7;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; position: relative; z-index: 1; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #3a3a3a; }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 14px;
+    background: var(--red);
+    border-radius: 2px;
+  }
+
+  /* ── FORM ELEMENTS ── */
+  label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  input[type="text"], input[type="password"], select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    padding: 0.7rem 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input[type="text"]:focus, input[type="password"]:focus, select:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(255,26,26,0.1);
+  }
+  select option { background: #1a1a1a; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; }
+
+  .api-row { display: flex; gap: 0.7rem; align-items: flex-end; }
+  .api-row input { flex: 1; }
+
+  /* toggle show/hide */
+  .toggle-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0 0.9rem;
+    height: 40px;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .toggle-btn:hover { color: var(--text); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 0.72rem 1.8rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary {
+    background: var(--red);
+    color: white;
+  }
+  .btn-primary:hover { background: #e00; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,26,26,0.35); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { background: #444; color: #666; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: #555; }
+
+  /* ── CATEGORY CHIPS ── */
+  .chip-row {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+  }
+  .chip {
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .chip:hover { border-color: var(--red); color: var(--text); }
+  .chip.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+
+  /* ── HOW TO GET API KEY ── */
+  .api-guide {
+    background: rgba(255,26,26,0.05);
+    border: 1px solid rgba(255,26,26,0.2);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-top: 1rem;
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .api-guide strong { color: var(--text); }
+  .api-guide a { color: var(--red); }
+  .api-guide-toggle {
+    background: none; border: none;
+    color: var(--red); font-size: 0.8rem;
+    cursor: pointer; margin-top: 0.6rem;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  /* ── SPINNER ── */
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ALERT ── */
+  .alert {
+    padding: 0.9rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    animation: fadeIn 0.3s ease;
+  }
+  .alert-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+  .alert-success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+  .alert-info { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); color: #a5b4fc; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── RESULTS SECTION ── */
+  #results { display: none; }
+  #results.visible { display: block; }
+
+  .results-header {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .results-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+  }
+  .results-title span { color: var(--red); }
+  .results-meta { font-size: 0.8rem; color: var(--muted); }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    opacity: 0.6;
+  }
+  .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text); line-height: 1.1; margin-top: 4px; }
+
+  /* ── VIDEO TABLE ── */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  thead th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  thead th:hover { color: var(--text); }
+  thead th.sort-asc::after { content: ' ▲'; font-size: 0.6rem; }
+  thead th.sort-desc::after { content: ' ▼'; font-size: 0.6rem; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--card-hover); }
+
+  td { padding: 0.85rem 1rem; vertical-align: middle; }
+
+  .rank-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--muted);
+    width: 32px;
+    text-align: center;
+  }
+  .rank-num.top3 { color: var(--red); }
+
+  .thumb-cell { width: 100px; }
+  .thumb-wrap {
+    position: relative;
+    width: 90px; height: 52px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #222;
+    flex-shrink: 0;
+  }
+  .thumb-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .thumb-play {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.4);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .thumb-wrap:hover .thumb-play { opacity: 1; }
+  .thumb-play svg { width: 20px; height: 20px; fill: white; }
+
+  .video-title-cell { min-width: 200px; max-width: 300px; }
+  .video-title {
+    font-weight: 600;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+    font-size: 0.88rem;
+  }
+  .channel-name {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 2px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .channel-name svg { width: 10px; height: 10px; fill: var(--muted); }
+
+  .num-cell {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--text);
+    font-size: 0.88rem;
+  }
+
+  .sentiment-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 110px;
+  }
+  .bar-track {
+    flex: 1;
+    height: 5px;
+    background: rgba(239,68,68,0.2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--positive);
+    border-radius: 999px;
+    transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .sentiment-pct {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--positive);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .date-cell { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+
+  .open-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .open-btn:hover { color: var(--text); border-color: #555; }
+
+  /* ── SENTIMENT MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 999;
+    backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    max-width: 560px; width: 100%;
+    max-height: 80vh; overflow-y: auto;
+    padding: 1.8rem;
+    animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 1.2rem;
+  }
+  .modal-title { font-weight: 700; font-size: 1rem; line-height: 1.4; max-width: 80%; }
+  .modal-close {
+    background: none; border: none;
+    color: var(--muted); font-size: 1.3rem;
+    cursor: pointer; line-height: 1;
+    padding: 0;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  .sentiment-summary {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.8rem; margin-bottom: 1.2rem;
+  }
+  .sent-box {
+    border-radius: 10px; padding: 0.8rem 1rem;
+    text-align: center;
+  }
+  .sent-box.pos { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+  .sent-box.neg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
+  .sent-box-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+  }
+  .sent-box.pos .sent-box-num { color: var(--positive); }
+  .sent-box.neg .sent-box-num { color: var(--negative); }
+  .sent-box-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .comment-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .comment-item {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    border-left: 3px solid transparent;
+  }
+  .comment-item.pos { border-left-color: var(--positive); }
+  .comment-item.neg { border-left-color: var(--negative); }
+  .comment-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .comment-item.pos .comment-tag { color: var(--positive); }
+  .comment-item.neg .comment-tag { color: var(--negative); }
+  .comment-text { color: var(--muted); }
+
+  /* ── EMPTY / LOADING STATES ── */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+  }
+  .empty-state svg { width: 48px; height: 48px; fill: #333; margin-bottom: 1rem; }
+  .empty-state h3 { font-size: 1rem; color: #555; margin-bottom: 0.5rem; }
+  .empty-state p { font-size: 0.85rem; }
+
+  .loading-state {
+    text-align: center; padding: 4rem 2rem;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    color: var(--muted);
+  }
+  .big-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(255,26,26,0.2);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .loading-steps {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.4rem;
+    text-align: left;
+    font-size: 0.82rem;
+  }
+  .loading-steps li { display: flex; align-items: center; gap: 8px; }
+  .step-icon { width: 16px; height: 16px; border-radius: 50%; background: #333; display: grid; place-items: center; flex-shrink: 0; }
+  .step-icon.done { background: rgba(34,197,94,0.2); color: var(--positive); font-size: 0.6rem; }
+  .step-icon.active { background: rgba(255,26,26,0.2); }
+  .step-spinner { width: 8px; height: 8px; border: 1px solid rgba(255,26,26,0.3); border-top-color: var(--red); border-radius: 50%; animation: spin 0.7s linear infinite; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 3rem;
+  }
+  footer a { color: var(--red); text-decoration: none; }
+
+  /* ── PROGRESS BAR (top of page) ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    height: 2px;
+    background: var(--red);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 3rem; }
+    .thumb-cell { display: none; }
+    .date-cell { display: none; }
+    header { padding: 0 1rem; }
+    .main { padding: 0 1rem 3rem; }
+    .card { padding: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </div>
+    <span class="logo-text">AKR <span>TREND</span></span>
+  </a>
+  <span class="header-badge">YouTube Analyzer</span>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <h1>Discover What's<br><em>Trending Now</em></h1>
+  <p>Analyze the top 20 most popular YouTube videos by category. Powered by YouTube Data API v3 with sentiment analysis on comments.</p>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- API KEY CARD -->
+  <div class="card">
+    <div class="card-title">Step 1 — YouTube API Key</div>
+    <div class="api-row">
+      <div class="form-group" style="flex:1">
+        <label for="apiKey">Your YouTube Data API v3 Key</label>
+        <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off"/>
+      </div>
+      <button class="toggle-btn" onclick="toggleApiKey()">Show</button>
+    </div>
+    <button class="api-guide-toggle" onclick="toggleGuide()">▶ How to get a free API Key?</button>
+    <div class="api-guide" id="apiGuide" style="display:none">
+      <strong>Get your free YouTube API Key in 3 steps:</strong><br>
+      1. Go to <a href="https://console.cloud.google.com/" target="_blank">console.cloud.google.com</a><br>
+      2. Create a project → Enable <strong>"YouTube Data API v3"</strong><br>
+      3. Go to <strong>Credentials → Create API Key</strong> → Copy and paste it above<br><br>
+      ⚠️ Free quota: <strong>10,000 units/day</strong>. Each search costs ~100 units. Keep your key private.
+    </div>
+  </div>
+
+  <!-- SEARCH OPTIONS CARD -->
+  <div class="card">
+    <div class="card-title">Step 2 — Search Options</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="searchType">Search Type</label>
+        <select id="searchType">
+          <option value="global">🌍 Global (Worldwide)</option>
+          <option value="id">🇮🇩 Indonesia (Local)</option>
+          <option value="us">🇺🇸 United States</option>
+          <option value="gb">🇬🇧 United Kingdom</option>
+          <option value="jp">🇯🇵 Japan</option>
+          <option value="kr">🇰🇷 South Korea</option>
+          <option value="in">🇮🇳 India</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="maxResults">Max Results</label>
+        <select id="maxResults">
+          <option value="10">Top 10</option>
+          <option value="20" selected>Top 20</option>
+          <option value="30">Top 30</option>
+          <option value="50">Top 50</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sortBy">Sort By</label>
+        <select id="sortBy">
+          <option value="viewCount">View Count</option>
+          <option value="relevance">Relevance</option>
+          <option value="rating">Rating</option>
+          <option value="date">Upload Date</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY CARD -->
+  <div class="card">
+    <div class="card-title">Step 3 — Select Category</div>
+    <div class="chip-row" id="categoryChips">
+      <div class="chip active" data-cat="0" data-label="All Categories" onclick="selectCategory(this)">All</div>
+      <div class="chip" data-cat="20" data-label="Gaming" onclick="selectCategory(this)">🎮 Gaming</div>
+      <div class="chip" data-cat="24" data-label="Entertainment" onclick="selectCategory(this)">🎭 Entertainment</div>
+      <div class="chip" data-cat="10" data-label="Music" onclick="selectCategory(this)">🎵 Music</div>
+      <div class="chip" data-cat="25" data-label="News & Politics" onclick="selectCategory(this)">📰 News</div>
+      <div class="chip" data-cat="27" data-label="Education" onclick="selectCategory(this)">📚 Education</div>
+      <div class="chip" data-cat="17" data-label="Sports" onclick="selectCategory(this)">⚽ Sports</div>
+      <div class="chip" data-cat="28" data-label="Science & Tech" onclick="selectCategory(this)">🔬 Science & Tech</div>
+      <div class="chip" data-cat="22" data-label="People & Blogs" onclick="selectCategory(this)">👥 Blogs</div>
+      <div class="chip" data-cat="19" data-label="Travel & Events" onclick="selectCategory(this)">✈️ Travel</div>
+      <div class="chip" data-cat="26" data-label="How-to & Style" onclick="selectCategory(this)">💡 How-to</div>
+    </div>
+  </div>
+
+  <!-- ACTION -->
+  <div id="alertBox"></div>
+  <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin-bottom:1.5rem">
+    <button class="btn btn-primary" id="analyzeBtn" onclick="startAnalysis()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Analyze Trends
+    </button>
+    <button class="btn btn-ghost" onclick="resetAll()">Clear</button>
+  </div>
+
+  <!-- LOADING STATE -->
+  <div id="loadingState" style="display:none">
+    <div class="loading-state">
+      <div class="big-spinner"></div>
+      <div style="font-weight:600;color:var(--text)">Fetching YouTube Data...</div>
+      <ul class="loading-steps" id="loadingSteps">
+        <li><span class="step-icon active"><span class="step-spinner"></span></span> Connecting to YouTube API</li>
+        <li><span class="step-icon" id="step2icon"></span> <span id="step2text" style="color:#444">Retrieving video data</span></li>
+        <li><span class="step-icon" id="step3icon"></span> <span id="step3text" style="color:#444">Fetching statistics</span></li>
+        <li><span class="step-icon" id="step4icon"></span> <span id="step4text" style="color:#444">Analyzing comments</span></li>
+        <li><span class="step-icon" id="step5icon"></span> <span id="step5text" style="color:#444">Running sentiment analysis</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <!-- SUMMARY STATS -->
+    <div class="results-header">
+      <div>
+        <div class="results-title">Top Videos — <span id="resultCategoryLabel">All</span></div>
+        <div class="results-meta" id="resultsMeta"></div>
+      </div>
+      <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="table-wrap">
+      <table id="videoTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="thumb-cell">Thumbnail</th>
+            <th onclick="sortTable('title')">Title</th>
+            <th onclick="sortTable('views')" class="sort-desc">Views ▼</th>
+            <th onclick="sortTable('likes')">Likes</th>
+            <th onclick="sortTable('comments')">Comments</th>
+            <th onclick="sortTable('sentiment')">Sentiment</th>
+            <th onclick="sortTable('date')">Uploaded</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="videoBody"></tbody>
+      </table>
+    </div>
+
+    <div id="noResults" class="empty-state" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <h3>No videos found</h3>
+      <p>Try a different category or search type.</p>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- SENTIMENT MODAL -->
+<div class="modal-overlay" id="sentModal" onclick="closeSentModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalVideoTitle"></div>
+      <button class="modal-close" onclick="closeSentModal()">✕</button>
+    </div>
+    <div class="sentiment-summary" id="modalSentSummary"></div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.05em">Sample Comments</div>
+    <div class="comment-list" id="modalComments"></div>
+  </div>
+</div>
+
+<footer>
+  Built for <strong>AKR Trend YouTube</strong> — YouTube Data API v3 · Sentiment Analysis · &copy; 2025<br>
+  <a href="https://console.cloud.google.com/" target="_blank">Get your API Key</a>
+</footer>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let selectedCategory = { cat: '0', label: 'All Categories' };
+let videoData = [];
+let sortCol = 'views';
+let sortDir = 'desc';
+let currentPage = 1;
+const PAGE_SIZE = 20;
+
+// ─── UI HELPERS ──────────────────────────────────────────────────────────────
+function toggleApiKey() {
+  const el = document.getElementById('apiKey');
+  const btn = el.nextElementSibling;
+  if (el.type === 'password') { el.type = 'text'; btn.textContent = 'Hide'; }
+  else { el.type = 'password'; btn.textContent = 'Show'; }
+}
+
+function toggleGuide() {
+  const g = document.getElementById('apiGuide');
+  const btn = document.querySelector('.api-guide-toggle');
+  if (g.style.display === 'none') { g.style.display = 'block'; btn.textContent = '▼ How to get a free API Key?'; }
+  else { g.style.display = 'none'; btn.textContent = '▶ How to get a free API Key?'; }
+}
+
+function selectCategory(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedCategory = { cat: el.dataset.cat, label: el.dataset.label };
+}
+
+function showAlert(msg, type = 'error') {
+  document.getElementById('alertBox').innerHTML =
+    `<div class="alert alert-${type}"><span>${type==='error'?'⚠️':type==='success'?'✅':'ℹ️'}</span><span>${msg}</span></div>`;
+}
+function clearAlert() { document.getElementById('alertBox').innerHTML = ''; }
+
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function fmtNum(n) {
+  if (!n) return '—';
+  if (n >= 1_000_000_000) return (n/1_000_000_000).toFixed(1)+'B';
+  if (n >= 1_000_000) return (n/1_000_000).toFixed(1)+'M';
+  if (n >= 1_000) return (n/1_000).toFixed(1)+'K';
+  return n.toString();
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Yesterday';
+  if (diff < 7) return diff + 'd ago';
+  if (diff < 30) return Math.floor(diff/7) + 'w ago';
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function stepDone(id, textId, txt) {
+  document.getElementById(id).innerHTML = '✓';
+  document.getElementById(id).classList.add('done');
+  document.getElementById(textId).textContent = txt;
+  document.getElementById(textId).style.color = '';
+}
+function stepActive(id, textId) {
+  document.getElementById(id).innerHTML = '<span class="step-spinner"></span>';
+  document.getElementById(id).style.background = 'rgba(255,26,26,0.2)';
+  document.getElementById(textId).style.color = 'var(--text)';
+}
+
+// ─── MAIN ANALYSIS ────────────────────────────────────────────────────────────
+async function startAnalysis() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { showAlert('Please enter your YouTube API Key.'); return; }
+
+  clearAlert();
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('results').classList.remove('visible');
+  setProgress(5);
+
+  try {
+    // Step 1 → connect (just sets up)
+    await sleep(400);
+    setProgress(15);
+
+    // Step 2 → search videos
+    stepActive('step2icon','step2text');
+    const searchType = document.getElementById('searchType').value;
+    const maxRes = parseInt(document.getElementById('maxResults').value);
+    const sortBy = document.getElementById('sortBy').value;
+    const regionCode = searchType === 'global' ? null : searchType.toUpperCase();
+
+    const videos = await searchVideos(apiKey, selectedCategory.cat, regionCode, sortBy, maxRes);
+    stepDone('step2icon','step2text', `Found ${videos.length} videos`);
+    setProgress(35);
+
+    if (!videos.length) { showNoResults(); return; }
+
+    // Step 3 → stats
+    stepActive('step3icon','step3text');
+    const videoIds = videos.map(v => v.id?.videoId).filter(Boolean);
+    const stats = await fetchStats(apiKey, videoIds);
+    stepDone('step3icon','step3text', 'Statistics fetched');
+    setProgress(55);
+
+    // Step 4 → comments
+    stepActive('step4icon','step4text');
+    const allComments = {};
+    const commentBatch = videoIds.slice(0, Math.min(10, videoIds.length)); // limit API usage
+    for (const vid of commentBatch) {
+      try {
+        const cmts = await fetchComments(apiKey, vid, 20);
+        allComments[vid] = cmts;
+      } catch(e) { allComments[vid] = []; }
+      await sleep(50);
+    }
+    stepDone('step4icon','step4text', 'Comments fetched');
+    setProgress(75);
+
+    // Step 5 → sentiment
+    stepActive('step5icon','step5text');
+    await sleep(300);
+    const sentiments = {};
+    for (const [vid, cmts] of Object.entries(allComments)) {
+      sentiments[vid] = analyzeSentiment(cmts);
+    }
+    stepDone('step5icon','step5text', 'Sentiment analysis complete');
+    setProgress(95);
+
+    // Merge data
+    videoData = mergeData(videos, stats, sentiments, allComments);
+    setProgress(100);
+    await sleep(200);
+
+    renderResults();
+  } catch(err) {
+    let msg = err.message || 'Unknown error';
+    const lower = msg.toLowerCase();
+
+    if (lower.includes('failed to fetch') || lower.includes('networkerror') || lower.includes('load failed')) {
+      msg = '<strong>Gagal terhubung ke YouTube API.</strong><br><br>' +
+        '<b>Kemungkinan penyebab:</b><br>' +
+        '1. File dibuka langsung (file:///) &mdash; browser memblokir API call dari file lokal.<br>' +
+        '&nbsp;&nbsp;&nbsp;Gunakan local server: <code>python -m http.server 8080</code> lalu buka <code>http://localhost:8080</code><br><br>' +
+        '2. YouTube Data API v3 belum di-enable di <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" style="color:#ff8080">Google Cloud Console</a><br><br>' +
+        '3. API Key punya restriction domain &mdash; hapus atau tambahkan <code>localhost</code> di Credentials settings.';
+    } else if (lower.includes('keyinvalid') || lower.includes('api key') || lower.includes('bad request')) {
+      msg = 'API Key tidak valid. Pastikan key sudah benar dan tidak ada spasi.';
+    } else if (lower.includes('quota') || lower.includes('quotaexceeded') || lower.includes('ratelimitexceeded')) {
+      msg = 'Kuota API habis (10.000 unit/hari). Coba lagi besok atau gunakan API Key lain.';
+    } else if (lower.includes('403') || lower.includes('forbidden')) {
+      msg = 'Akses ditolak (403). Pastikan YouTube Data API v3 sudah di-enable di <a href="https://console.cloud.google.com" target="_blank" style="color:#ff8080">Google Cloud Console</a>.';
+    } else if (lower.includes('400')) {
+      msg = 'Request tidak valid (400). Cek kembali API Key dan pengaturan search.';
+    }
+
+    showAlert(msg);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Analyze Trends';
+    document.getElementById('loadingState').style.display = 'none';
+    setProgress(0);
+  }
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── CATEGORY → KEYWORD MAP ───────────────────────────────────────────────────
+const CATEGORY_KEYWORDS = {
+  '0':  '',
+  '10': 'music',
+  '17': 'sports highlights',
+  '20': 'gaming',
+  '22': 'vlog',
+  '24': 'entertainment',
+  '25': 'news',
+  '26': 'tutorial how to',
+  '27': 'education learning',
+  '28': 'science technology',
+  '19': 'travel'
+};
+
+// ─── YOUTUBE API CALLS ────────────────────────────────────────────────────────
+async function searchVideos(apiKey, categoryId, regionCode, order, maxResults) {
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+  const publishedAfter = oneMonthAgo.toISOString();
+
+  const keyword = CATEGORY_KEYWORDS[categoryId] || '';
+
+  const params = new URLSearchParams({
+    part: 'snippet',
+    type: 'video',
+    order: order,
+    maxResults: Math.min(maxResults, 50),
+    publishedAfter: publishedAfter,
+    key: apiKey
+  });
+  if (keyword) params.append('q', keyword);
+  if (regionCode) params.append('regionCode', regionCode);
+
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message || 'YouTube API error');
+
+  let items = (data.items || []).filter(i => i.id && i.id.videoId);
+
+  // If fewer than needed, try without date filter
+  if (items.length < 10 && maxResults > 10) {
+    const params2 = new URLSearchParams({
+      part: 'snippet', type: 'video', order: order,
+      maxResults: Math.min(maxResults, 50), key: apiKey
+    });
+    if (keyword) params2.append('q', keyword);
+    if (regionCode) params2.append('regionCode', regionCode);
+    const res2 = await fetch(`https://www.googleapis.com/youtube/v3/search?${params2}`);
+    const data2 = await res2.json();
+    if (!data2.error) items = (data2.items || []).filter(i => i.id && i.id.videoId);
+  }
+
+  return items;
+}
+
+async function fetchStats(apiKey, videoIds) {
+  const chunks = chunkArray(videoIds, 50);
+  const allStats = {};
+  for (const chunk of chunks) {
+    const params = new URLSearchParams({
+      part: 'statistics,snippet,contentDetails',
+      id: chunk.join(','),
+      key: apiKey
+    });
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?${params}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    for (const item of (data.items || [])) {
+      allStats[item.id] = {
+        views: parseInt(item.statistics?.viewCount || 0),
+        likes: parseInt(item.statistics?.likeCount || 0),
+        comments: parseInt(item.statistics?.commentCount || 0),
+        publishedAt: item.snippet?.publishedAt,
+        title: item.snippet?.title,
+        channel: item.snippet?.channelTitle,
+        thumbnail: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url,
+        duration: item.contentDetails?.duration
+      };
+    }
+  }
+  return allStats;
+}
+
+async function fetchComments(apiKey, videoId, maxResults = 20) {
+  const params = new URLSearchParams({
+    part: 'snippet',
+    videoId: videoId,
+    maxResults: maxResults,
+    order: 'relevance',
+    key: apiKey
+  });
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?${params}`);
+  const data = await res.json();
+  if (data.error) return [];
+  return (data.items || []).map(i => i.snippet?.topLevelComment?.snippet?.textDisplay || '');
+}
+
+function chunkArray(arr, size) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i+size));
+  return chunks;
+}
+
+// ─── SENTIMENT ANALYSIS ───────────────────────────────────────────────────────
+const POSITIVE_WORDS = ['love','great','awesome','amazing','excellent','good','fantastic','wonderful','beautiful','best','perfect','incredible','outstanding','brilliant','superb','fun','enjoy','enjoyed','like','liked','helpful','interesting','cool','nice','wow','impressive','happy','thank','thanks','congratulations','well done','fire','🔥','❤️','😍','😊','👏','👍','💯','🙌','😂','lol','hilarious'];
+const NEGATIVE_WORDS = ['hate','bad','terrible','awful','worst','boring','stupid','dumb','ugly','horrible','disappointing','waste','trash','garbage','sucks','annoying','useless','mediocre','poor','dull','dislike','lame','fake','lie','lying','scam','clickbait','misleading','😤','😠','👎','🤮','💩','cringe'];
+
+function analyzeSentiment(comments) {
+  let pos = 0, neg = 0;
+  const posComments = [], negComments = [];
+  for (const c of comments) {
+    const lower = c.toLowerCase();
+    let p = 0, n = 0;
+    for (const w of POSITIVE_WORDS) if (lower.includes(w)) p++;
+    for (const w of NEGATIVE_WORDS) if (lower.includes(w)) n++;
+    if (p > n) { pos++; posComments.push(c); }
+    else if (n > p) { neg++; negComments.push(c); }
+    else if (p === 0 && n === 0) { pos++; posComments.push(c); } // neutral → positive
+  }
+  const total = pos + neg || 1;
+  return { pos, neg, posPercent: Math.round((pos/total)*100), posComments, negComments };
+}
+
+// ─── DATA MERGE ───────────────────────────────────────────────────────────────
+function mergeData(searchItems, stats, sentiments, comments) {
+  const merged = [];
+  for (const item of searchItems) {
+    const id = item.id?.videoId || item.id;
+    if (!id) continue;
+    const s = stats[id] || {};
+    const sent = sentiments[id] || { pos:0, neg:0, posPercent:50, posComments:[], negComments:[] };
+    merged.push({
+      id,
+      title: s.title || item.snippet?.title || 'Unknown',
+      channel: s.channel || item.snippet?.channelTitle || 'Unknown',
+      thumbnail: s.thumbnail || item.snippet?.thumbnails?.medium?.url || '',
+      views: s.views || 0,
+      likes: s.likes || 0,
+      comments: s.comments || 0,
+      publishedAt: s.publishedAt || item.snippet?.publishedAt || '',
+      sentiment: sent,
+      rawComments: comments[id] || [],
+      fromPreviousMonth: false
+    });
+  }
+  // sort by views descending by default
+  merged.sort((a,b) => b.views - a.views);
+  return merged;
+}
+
+// ─── RENDER RESULTS ───────────────────────────────────────────────────────────
+function renderResults() {
+  if (!videoData.length) { showNoResults(); return; }
+
+  document.getElementById('results').classList.add('visible');
+  document.getElementById('resultCategoryLabel').textContent = selectedCategory.label;
+
+  const region = document.getElementById('searchType').value;
+  const regionLabel = document.getElementById('searchType').options[document.getElementById('searchType').selectedIndex].text;
+  document.getElementById('resultsMeta').textContent =
+    `${videoData.length} videos · ${regionLabel} · Last 30 days`;
+
+  // Stats
+  const totalViews = videoData.reduce((a,v)=>a+v.views,0);
+  const totalLikes = videoData.reduce((a,v)=>a+v.likes,0);
+  const avgSent = videoData.length ? Math.round(videoData.reduce((a,v)=>a+v.sentiment.posPercent,0)/videoData.length) : 0;
+  const maxViews = Math.max(...videoData.map(v=>v.views));
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Videos Found</div><div class="stat-value">${videoData.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Views</div><div class="stat-value">${fmtNum(totalViews)}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Likes</div><div class="stat-value">${fmtNum(totalLikes)}</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Positive Sentiment</div><div class="stat-value">${avgSent}%</div></div>
+    <div class="stat-card"><div class="stat-label">Most Viewed</div><div class="stat-value">${fmtNum(maxViews)}</div></div>
+  `;
+
+  renderTable();
+}
+
+function renderTable() {
+  const sorted = [...videoData].sort((a,b) => {
+    let av, bv;
+    switch(sortCol) {
+      case 'views': av=a.views; bv=b.views; break;
+      case 'likes': av=a.likes; bv=b.likes; break;
+      case 'comments': av=a.comments; bv=b.comments; break;
+      case 'sentiment': av=a.sentiment.posPercent; bv=b.sentiment.posPercent; break;
+      case 'date': av=new Date(a.publishedAt); bv=new Date(b.publishedAt); break;
+      case 'title': av=a.title.toLowerCase(); bv=b.title.toLowerCase(); break;
+      default: av=a.views; bv=b.views;
+    }
+    if (av < bv) return sortDir==='asc'?-1:1;
+    if (av > bv) return sortDir==='asc'?1:-1;
+    return 0;
+  });
+
+  const body = document.getElementById('videoBody');
+  body.innerHTML = sorted.map((v, i) => {
+    const rank = i+1;
+    const isTop3 = rank <= 3;
+    const sent = v.sentiment;
+    return `
+      <tr>
+        <td><div class="rank-num ${isTop3?'top3':''}">${rank}</div></td>
+        <td class="thumb-cell">
+          <a href="https://youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">
+            <div class="thumb-wrap">
+              <img src="${v.thumbnail}" alt="" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2290%22 height=%2252%22><rect fill=%22%23222%22 width=%2290%22 height=%2252%22/></svg>'"/>
+              <div class="thumb-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+          </a>
+        </td>
+        <td class="video-title-cell">
+          <div class="video-title">
+            <a href="https://youtube.com/watch?v=${v.id}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${escHtml(v.title)}</a>
+          </div>
+          <div class="channel-name">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            ${escHtml(v.channel)}
+          </div>
+        </td>
+        <td class="num-cell">${fmtNum(v.views)}</td>
+        <td class="num-cell">${fmtNum(v.likes)}</td>
+        <td class="num-cell">${fmtNum(v.comments)}</td>
+        <td>
+          <div class="sentiment-bar">
+            <div class="bar-track"><div class="bar-fill" style="width:${sent.posPercent}%"></div></div>
+            <div class="sentiment-pct">${sent.posPercent}%</div>
+          </div>
+        </td>
+        <td class="date-cell">${fmtDate(v.publishedAt)}</td>
+        <td>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <a class="open-btn" href="https://youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              Watch
+            </a>
+            ${v.rawComments.length ? `<button class="open-btn" onclick='openSentModal(${JSON.stringify(v.id)})'>💬 Sentiment</button>` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'desc'; }
+  renderTable();
+}
+
+function showNoResults() {
+  document.getElementById('results').classList.add('visible');
+  document.getElementById('videoBody').innerHTML = '';
+  document.getElementById('noResults').style.display = 'block';
+  document.getElementById('statsRow').innerHTML = '';
+  document.getElementById('loadingState').style.display = 'none';
+}
+
+function resetAll() {
+  videoData = [];
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('loadingState').style.display = 'none';
+  clearAlert();
+  setProgress(0);
+  document.getElementById('apiKey').value = '';
+}
+
+// ─── SENTIMENT MODAL ──────────────────────────────────────────────────────────
+function openSentModal(videoId) {
+  const v = videoData.find(x => x.id === videoId);
+  if (!v) return;
+  document.getElementById('modalVideoTitle').textContent = v.title;
+
+  const s = v.sentiment;
+  document.getElementById('modalSentSummary').innerHTML = `
+    <div class="sent-box pos">
+      <div class="sent-box-num">${s.posPercent}%</div>
+      <div class="sent-box-label">Positive (${s.pos} comments)</div>
+    </div>
+    <div class="sent-box neg">
+      <div class="sent-box-num">${100-s.posPercent}%</div>
+      <div class="sent-box-label">Negative (${s.neg} comments)</div>
+    </div>
+  `;
+
+  const posShow = s.posComments.slice(0,3);
+  const negShow = s.negComments.slice(0,3);
+  const commentHtml = [
+    ...posShow.map(c=>`<div class="comment-item pos"><div class="comment-tag">Positive</div><div class="comment-text">${escHtml(c.slice(0,200))}</div></div>`),
+    ...negShow.map(c=>`<div class="comment-item neg"><div class="comment-tag">Negative</div><div class="comment-text">${escHtml(c.slice(0,200))}</div></div>`)
+  ].join('') || '<div style="color:var(--muted);font-size:0.83rem">No comments analyzed (comments may be disabled)</div>';
+
+  document.getElementById('modalComments').innerHTML = commentHtml;
+  document.getElementById('sentModal').classList.add('open');
+}
+
+function closeSentModal(e) {
+  if (!e || e.target === document.getElementById('sentModal')) {
+    document.getElementById('sentModal').classList.remove('open');
+  }
+}
+
+// ─── EXPORT CSV ───────────────────────────────────────────────────────────────
+function exportCSV() {
+  if (!videoData.length) return;
+  const header = ['Rank','Title','Channel','Views','Likes','Comments','Positive Sentiment %','Published Date','URL'];
+  const rows = videoData.map((v,i) => [
+    i+1,
+    `"${v.title.replace(/"/g,'""')}"`,
+    `"${v.channel.replace(/"/g,'""')}"`,
+    v.views, v.likes, v.comments,
+    v.sentiment.posPercent,
+    v.publishedAt ? new Date(v.publishedAt).toLocaleDateString() : '',
+    `https://youtube.com/watch?v=${v.id}`
+  ]);
+  const csv = [header, ...rows].map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `akr-trend-${selectedCategory.label.toLowerCase().replace(/\s/g,'-')}-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// ─── UTIL ─────────────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── KEYBOARD SHORTCUTS ───────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSentModal();
+  if ((e.key === 'Enter') && document.activeElement === document.getElementById('apiKey')) startAnalysis();
+});
+</script>
+</body>
+</html>
